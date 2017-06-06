@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hello, WebVR! - A-Frame</title>
+    <meta name="description" content="Hello, WebVR! - A-Frame">
+    <script src="aframe-master.js"></script>
+	<style>
+		.sign{
+			
+			align : right;
+			width : 40px ;
+			height : 40px;
+			z-index : 20 ;
+			position : float ;
+		 
+		}
+		#zoom_button{
+			margin-top:500px;
+			margin-left:1150px;
+			align : right;
+			position:absolute;
+			z-index : 20 ;
+		}
+		#control_button 
+		{
+			margin-top:500px;
+			margin-left:1200px;
+			position:absolute;
+			z-index : 40 ;
+		}
+		#hs 
+		{
+			margin-top:50px;
+			margin-left:120px;
+			position:absolute;
+			z-index : 40 ;
+		}
+		</style>
+	<script>
+		document.onkeydown = checkKey;
+
+		function checkKey(e) {
+
+			e = e || window.event;
+
+			if (e.keyCode == '38') {
+				up();
+			}
+			else if (e.keyCode == '40') {
+				down();
+			}
+			else if (e.keyCode == '37') {
+			    left();
+			}
+			else if (e.keyCode == '39') {
+			   right();
+			}
+			else if (e.keyCode == '107') {
+			   zoom_in();
+			}
+			else if (e.keyCode == '109') {
+			   zoom_out();
+			}
+
+		}
+
+		function right(){
+			var p=document.getElementById('loc');
+			var n=p.getAttribute('rotation');
+			p.setAttribute('rotation',{x:n.x,y:n.y-1,z:0});
+			//alert("I am an next box!");
+		}
+		function left(){
+			var p=document.getElementById('loc');
+			var n=p.getAttribute('rotation');
+			p.setAttribute('rotation',{x:n.x,y:n.y+1,z:0});
+			//alert("I am an prev box!");
+		}
+		function up(){
+			var p=document.getElementById('loc');
+			var n=p.getAttribute('rotation');
+			p.setAttribute('rotation',{x:n.x+1,y:n.y,z:0});
+			//alert("I am an up box!");
+		}
+		function down(){
+			var p=document.getElementById('loc');
+			var n=p.getAttribute('rotation');
+			p.setAttribute('rotation',{x:n.x-1,y:n.y,z:0});
+			//alert("I am an down box!");
+		}
+		function zoom_in(){
+			var p=document.getElementById('loc');
+			var n=p.getAttribute('scale');
+			p.setAttribute('scale',{x:n.x,y:n.y,z:n.z+0.1});
+			//alert("I am an down box!");
+		}
+		function zoom_out(){
+			var p=document.getElementById('loc');
+			var n=p.getAttribute('scale');
+			if(n.z>0.6)
+			{
+				p.setAttribute('scale',{x:n.x,y:n.y,z:n.z-0.1});
+			}
+			else
+			{
+				alert("NO ZOOM OUT BEYOND THIS POINT!");
+			}
+		}
+		function getAngle(){
+			var p=document.getElementById('loc');
+			var n=p.getAttribute('rotation');
+			//p.setAttribute('rotation',{x:n.x-1,y:n.y,z:0});
+			n.x=n.x%360;
+			n.y=n.y%360
+			if(n.x<0)
+			{
+				n.x=360+n.x;
+	        }
+			if(n.y<0)
+			{
+				n.y=360+n.y;
+			}
+			alert("I am an down box!"+n.x+" "+n.y+" "+n.z);
+		}
+		function getupdate(){
+			var x1=document.getElementById('x-posi').value;
+			var y1=document.getElementById('y-posi').value;
+			var z1=document.getElementById('z-posi').value;
+			alert("values are"+x1+" "+y1+" "+z1);
+		}
+	</script>
+  </head>
+  <body>
+			<div id='control_button'>
+			<div class='sign'>
+				<button id='right' type='button' onclick='right()' value='right' >
+					<img src='next.jpg' height='20px' width='20px'>
+				</button>
+			</div>
+			<div class='sign'>
+				<button id='left' type='button' onclick='left()' value='left' >
+					<img src='prev.jpg' height='20px' width='20px'>
+				</button>
+			</div>	
+			<div class='sign'>
+				<button type='button' onclick='up()' value='up' >
+					<img src='up.jpg' height='20px' width='20px'>
+				</button>
+			</div>
+			<div class='sign'>
+				<button type='button' onclick='down()' value='down' >
+					<img src='down.jpg' height='20px' width='20px'>
+				</button>
+			</div>
+			</div>
+			<div id='zoom_button'>
+				<div class='sign'>
+					<button type='button' onclick='getAngle()' value='zoom_in' >
+						<img src='zoom_in.png' height='20px' width='20px'>
+					</button>
+				</div>
+				<div class='sign'>
+					<button type='button' onclick='getupdate()' value='zoom_out' >
+						<img src='zoom_out.png' height='20px' width='20px'>
+					</button>
+				</div>
+			</div>
+			
+			<div id='scene'>
+				<a-scene id='scene1' canvas="" keyboard-shortcuts="" vr-mode-ui="">
+					<a-sky id='sky' src="scene1.jpg" rotation="0 0 0" material="color:#FFF;shader:flat" geometry="primitive:sphere;radius:5000;segmentsWidth:64;segmentsHeight:64" scale="-1 1 1">
+					</a-sky>
+					<a-entity light="color:#fff;type:ambient" data-aframe-default-light="">
+					</a-entity>
+					<a-entity light="color:#fff;intensity:0.2" position="-1 2 1" data-aframe-default-light="">
+					</a-entity>
+					<a-entity position="0 1.8 4" data-aframe-default-camera="">
+						<a-entity id="loc" camera="active:true" wasd-controls="" look-controls="" rotation="0 0 0" position="0 0 0">
+						<a-cursor id='cursor' color="#FFFFFF"/>
+						</a-entity>
+					</a-entity>
+					<div id='hs'>
+						<div class='sign'>
+							<script>
+							function AddHotspot(){
+								  
+								  var n=document.getElementById('loc').getAttribute('rotation');
+								    n.x=n.x%360;
+									n.y=n.y%360
+									if(n.x<0)
+									{
+										n.x=360+n.x;
+									}
+									if(n.y<0)
+									{
+										n.y=360+n.y;
+									}
+									a1=-1000*(Math.cos((n.y/180)*3.14))*(Math.cos((n.x/180)*3.14));
+									a2=-1000*(Math.sin((n.y/180)*3.14))*(Math.cos((n.x/180)*3.14));
+									a3=1000*(Math.sin((n.x/180)*3.14));
+									//alert("Value a1 "+a1+" "+" and a2 "+a2);
+								  var k=document.getElementById('scene1');
+								  var el=document.createElement('a-entity');
+								  el.setAttribute("id","point");
+								  el.setAttribute('geometry',{primitive: 'plane', height:100, width:100});
+								  el.setAttribute("material",{shader: 'flat', src:'logo1.png'});
+								  el.setAttribute("event-set__1",{_event: 'mousedown', scale:'1 1 1'});
+								  el.setAttribute("event-set__2",{_event: 'mouseup', scale:'1.2 1.2 1'});
+								  el.setAttribute("event-set__3",{_event: 'mouseenter', scale:'1.2 1.2 1'});
+								  el.setAttribute("event-set__4",{_event: 'mouseleave', scale:'1 1 1'});
+								  el.setAttribute('position',{x:a2,y:a3,z:a1});
+								  el.setAttribute('rotation',{x:n.x,y:n.y,z:0});
+								  el.setAttribute('visible','true');
+								  el.setAttribute("click-drag", "");
+								  k.appendChild(el);
+								}
+								/*function update()
+								{
+									var d1=document.getElementById('point');
+									var x1=document.getElementById('x-posi').value;
+									var y1=document.getElementById('y-posi').value;
+									var z1=document.getElementById('z-posi').value;
+									d1.setAttribute("position",{x:x1,y:y1,z:z1});
+									//alert("values are"+x1+" "+y1+" "+z1+"  "+x2+" "+y2+" "+z2);
+								}*/
+							</script>
+							<button type='button' onclick='AddHotspot()' value='ADDHS' >
+								Add Hotspot
+							</button>
+							<!--input type='range' onclick='update()' id='x-posi' min='-400' max='400'>
+							<input type='range' onclick='update()' id='y-posi' min='-400' max='400'>
+							<input type='range' onclick='update()' id='z-posi' min='-400' max='400'>
+							<button onclick='update()'>UPDATE</button-->
+						</div>
+					</div>
+					<canvas class="a-canvas" width="811" height="651" style="height: 651px; width: 811px;">
+					</canvas>
+					<div class="a-enter-vr" data-a-enter-vr-no-headset="" data-a-enter-vr-no-webvr="">
+						<button class="a-enter-vr-button"></button>
+							<div class="a-enter-vr-modal">
+								<p>Your browser does not support WebVR. To enter VR, use a VR-compatible browser or a mobile phone.</p>
+								<a href="http://mozvr.com/#start" target="_blank">Learn more.</a>
+							</div>
+					</div>
+					<div class="a-orientation-modal a-hidden">
+						<button>Exit VR</button>
+					</div>
+				</a-scene>
+
+			</div>
+  </body>
+</html>
